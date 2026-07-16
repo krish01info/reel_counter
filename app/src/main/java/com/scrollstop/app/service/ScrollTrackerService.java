@@ -119,8 +119,10 @@ public class ScrollTrackerService extends AccessibilityService {
         String pkg = pkgCharSeq.toString();
 
         switch (event.getEventType()) {
-            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-            case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED: {
+
+            // WINDOW_STATE_CHANGED = user navigated to a new screen/activity
+            // Use this to RESET context (they may have left Reels)
+            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED: {
                 boolean oldState = isInReels || isInShorts;
                 switch (pkg) {
                     case PKG_INSTAGRAM:
@@ -130,24 +132,39 @@ public class ScrollTrackerService extends AccessibilityService {
                         refreshYoutubeContext();
                         break;
                     default:
-                        isInReels = false;
+                        // User switched to a different app
+                        isInReels  = false;
                         isInShorts = false;
                         break;
                 }
-
                 boolean newState = isInReels || isInShorts;
                 if (newState != oldState) {
                     mainHandler.post(() -> {
-                        if (newState) {
-                            overlayManager.show();
-                        } else {
-                            overlayManager.hide();
-                        }
+                        if (newState) overlayManager.show(); else overlayManager.hide();
                     });
                 }
                 break;
             }
 
+            // WINDOW_CONTENT_CHANGED = UI updated inside same screen (happens constantly)
+            // Only use this to DETECT entry into Reels — NEVER reset isInReels to false here
+            case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED: {
+                if (!isInReels && PKG_INSTAGRAM.equals(pkg)) {
+                    refreshInstagramContext();
+                    if (isInReels) {
+                        mainHandler.post(overlayManager::show);
+                    }
+                }
+                if (!isInShorts && PKG_YOUTUBE.equals(pkg)) {
+                    refreshYoutubeContext();
+                    if (isInShorts) {
+                        mainHandler.post(overlayManager::show);
+                    }
+                }
+                break;
+            }
+
+            // TYPE_VIEW_SCROLLED = actual scroll happened
             case AccessibilityEvent.TYPE_VIEW_SCROLLED: {
                 switch (pkg) {
                     case PKG_INSTAGRAM:
@@ -165,8 +182,11 @@ public class ScrollTrackerService extends AccessibilityService {
     private void refreshInstagramContext() {
         AccessibilityNodeInfo root = getRootInActiveWindow();
         if (root == null) return;
-        isInReels = containsAnyViewId(root, IG_REELS_VIEW_IDS);
+        boolean found = containsAnyViewId(root, IG_REELS_VIEW_IDS);
         root.recycle();
+        // Only update to true, or update to false only on full navigation events
+        if (found) isInReels = true;
+        else isInReels = false;
     }
 
     // Class names used by Instagram for Reels-related activities
