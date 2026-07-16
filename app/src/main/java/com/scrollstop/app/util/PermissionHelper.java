@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.view.accessibility.AccessibilityManager;
 import com.scrollstop.app.service.ScrollTrackerService;
@@ -48,13 +49,34 @@ public class PermissionHelper {
     }
 
     public static Intent overlaySettingsIntent(Context context) {
-        return new Intent(
+        // Deep-link directly to THIS app's overlay permission page
+        Intent intent = new Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + context.getPackageName())
         );
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
-    public static Intent accessibilitySettingsIntent() {
-        return new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+    public static Intent accessibilitySettingsIntent(Context context) {
+        // On Android 9+ (API 28+), try to open directly to our service details
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                // ComponentName of our accessibility service
+                String componentName = context.getPackageName()
+                        + "/" + ScrollTrackerService.class.getName();
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // Bundle that highlights our service in the list
+                Bundle bundle = new Bundle();
+                bundle.putString(":settings:fragment_args_key", componentName);
+                intent.putExtra(":settings:show_fragment_args", bundle);
+                return intent;
+            } catch (Exception ignored) { /* fall through */ }
+        }
+        // Fallback: open the main Accessibility settings
+        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 }

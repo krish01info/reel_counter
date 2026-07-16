@@ -49,6 +49,13 @@ public class ScrollTrackerService extends AccessibilityService {
     private boolean isInReels  = false;
     private boolean isInShorts = false;
 
+    // Debounce: wait until scroll gesture ends before counting 1 reel
+    private static final long DEBOUNCE_MS = 400;
+    private final Runnable igDebounce = () ->
+            ScrollCounterState.incrementIg(getApplicationContext());
+    private final Runnable ytDebounce = () ->
+            ScrollCounterState.incrementYt(getApplicationContext());
+
     // Broadcast receiver to stop the service via disableSelf()
     private final BroadcastReceiver stopServiceReceiver = new BroadcastReceiver() {
         @Override
@@ -210,7 +217,6 @@ public class ScrollTrackerService extends AccessibilityService {
                 if (!isInReels && srcClass != null) {
                     String cls = srcClass.toString();
                     if (cls.contains("ViewPager") || cls.contains("RecyclerView")) {
-                        // Check if event class name matches known Reels classes
                         CharSequence evtClass = event.getClassName();
                         if (evtClass != null && IG_REELS_CLASS_NAMES.contains(evtClass.toString())) {
                             isInReels = true;
@@ -222,7 +228,10 @@ public class ScrollTrackerService extends AccessibilityService {
         }
 
         if (isInReels) {
-            mainHandler.post(() -> ScrollCounterState.incrementIg(getApplicationContext()));
+            // Debounce: cancel any pending count, restart 400ms timer
+            // When timer fires (scroll gesture ended) → count exactly 1 reel
+            mainHandler.removeCallbacks(igDebounce);
+            mainHandler.postDelayed(igDebounce, DEBOUNCE_MS);
         }
     }
 
@@ -246,7 +255,10 @@ public class ScrollTrackerService extends AccessibilityService {
         }
 
         if (isInShorts) {
-            mainHandler.post(() -> ScrollCounterState.incrementYt(getApplicationContext()));
+            // Debounce: cancel any pending count, restart 400ms timer
+            // When timer fires (scroll gesture ended) → count exactly 1 short
+            mainHandler.removeCallbacks(ytDebounce);
+            mainHandler.postDelayed(ytDebounce, DEBOUNCE_MS);
         }
     }
 

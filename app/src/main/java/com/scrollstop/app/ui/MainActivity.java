@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements ScrollCounterStat
             if (!overlayOk) {
                 intent = PermissionHelper.overlaySettingsIntent(MainActivity.this);
             } else {
-                intent = PermissionHelper.accessibilitySettingsIntent();
+                intent = PermissionHelper.accessibilitySettingsIntent(MainActivity.this);
             }
             startActivity(intent);
         });
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ScrollCounterStat
             boolean isRunning = ScrollCounterState.isServiceRunning();
             if (!isRunning) {
                 // Activate
-                startActivity(PermissionHelper.accessibilitySettingsIntent());
+                startActivity(PermissionHelper.accessibilitySettingsIntent(MainActivity.this));
             } else {
                 // Deactivate
                 sendBroadcast(new Intent("com.scrollstop.app.ACTION_STOP_SERVICE"));
