@@ -27,11 +27,20 @@ public class ScrollTrackerService extends AccessibilityService {
     private static final Set<String> YT_SHORTS_VIEW_IDS = new HashSet<>();
 
     static {
+        // Instagram Reels view IDs (covers multiple app versions)
         IG_REELS_VIEW_IDS.add("com.instagram.android:id/clips_viewer_view_pager");
         IG_REELS_VIEW_IDS.add("com.instagram.android:id/reel_viewer_root");
+        IG_REELS_VIEW_IDS.add("com.instagram.android:id/clips_viewer_container");
+        IG_REELS_VIEW_IDS.add("com.instagram.android:id/reels_tray_container");
+        IG_REELS_VIEW_IDS.add("com.instagram.android:id/recycler_view");
+        IG_REELS_VIEW_IDS.add("com.instagram.android:id/clips_tab");
+        IG_REELS_VIEW_IDS.add("com.instagram.android:id/unified_landing_page_root");
 
+        // YouTube Shorts view IDs
         YT_SHORTS_VIEW_IDS.add("com.google.android.youtube:id/shorts_container");
         YT_SHORTS_VIEW_IDS.add("com.google.android.youtube:id/reel_player_page_container");
+        YT_SHORTS_VIEW_IDS.add("com.google.android.youtube:id/reel_recycler");
+        YT_SHORTS_VIEW_IDS.add("com.google.android.youtube:id/shorts_pivot_item");
     }
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -160,6 +169,14 @@ public class ScrollTrackerService extends AccessibilityService {
         root.recycle();
     }
 
+    // Class names used by Instagram for Reels-related activities
+    private static final Set<String> IG_REELS_CLASS_NAMES = new HashSet<>();
+    static {
+        IG_REELS_CLASS_NAMES.add("com.instagram.reels.fragment.ReelsViewerFragment");
+        IG_REELS_CLASS_NAMES.add("com.instagram.mainactivity.MainActivity");
+        IG_REELS_CLASS_NAMES.add("com.instagram.clips.activities.ClipsViewerActivity");
+    }
+
     private void handleInstagramScroll(AccessibilityEvent event) {
         if (!isInReels) {
             AccessibilityNodeInfo source = event.getSource();
@@ -167,6 +184,18 @@ public class ScrollTrackerService extends AccessibilityService {
                 String srcId = source.getViewIdResourceName();
                 if (srcId != null && IG_REELS_VIEW_IDS.contains(srcId)) {
                     isInReels = true;
+                }
+                // Fallback: check the class name of the scrolled view
+                CharSequence srcClass = source.getClassName();
+                if (!isInReels && srcClass != null) {
+                    String cls = srcClass.toString();
+                    if (cls.contains("ViewPager") || cls.contains("RecyclerView")) {
+                        // Check if event class name matches known Reels classes
+                        CharSequence evtClass = event.getClassName();
+                        if (evtClass != null && IG_REELS_CLASS_NAMES.contains(evtClass.toString())) {
+                            isInReels = true;
+                        }
+                    }
                 }
                 source.recycle();
             }
