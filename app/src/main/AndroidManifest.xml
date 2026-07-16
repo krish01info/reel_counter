@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Required to check GitHub for updates -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- ================================================================
          APPLICATION
          ================================================================ -->

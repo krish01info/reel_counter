@@ -129,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements ScrollCounterStat
 
         // Perform initial UI render
         updateUi();
+
+        // Check for updates from GitHub in the background
+        checkForUpdates();
     }
 
     private void setupHeaderAnimation() {
@@ -236,5 +239,80 @@ public class MainActivity extends AppCompatActivity implements ScrollCounterStat
             sliderThreshold.setProgress(threshold);
         }
         textThresholdLabel.setText("Alert threshold: " + threshold + " scrolls");
+    }
+
+    private void checkForUpdates() {
+        new Thread(() -> {
+            try {
+                java.net.URL url = new java.net.URL("https://raw.githubusercontent.com/krish01info/reel_counter/main/version.json");
+                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+
+                if (conn.getResponseCode() == 200) {
+                    java.io.InputStream in = conn.getInputStream();
+                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(in));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    reader.close();
+
+                    String json = sb.toString();
+                    int remoteVersionCode = parseJsonInt(json, "versionCode");
+                    String remoteVersionName = parseJsonString(json, "versionName");
+                    String updateUrl = parseJsonString(json, "updateUrl");
+
+                    int localVersionCode;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                        localVersionCode = (int) getPackageManager().getPackageInfo(getPackageName(), 0).getLongVersionCode();
+                    } else {
+                        localVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+                    }
+
+                    if (remoteVersionCode > localVersionCode) {
+                        runOnUiThread(() -> showUpdateDialog(remoteVersionName, updateUrl));
+                    }
+                }
+            } catch (Exception e) {
+                // Fail silently in background if offline
+            }
+        }).start();
+    }
+
+    private void showUpdateDialog(String newVersionName, String updateUrl) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Update Available!")
+                .setMessage("A new version (v" + newVersionName + ") of Scroll Stop is available. Would you like to update now?")
+                .setPositiveButton("Update", (dialog, which) -> {
+                    try {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(updateUrl));
+                        startActivity(browserIntent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .setNegativeButton("Later", null)
+                .show();
+    }
+
+    private int parseJsonInt(String json, String key) {
+        String pattern = "\"" + key + "\"\\s*:\\s*(\\d+)";
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile(pattern).matcher(json);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return 0;
+    }
+
+    private String parseJsonString(String json, String key) {
+        String pattern = "\"" + key + "\"\\s*:\\s*\"([^\"]+)\"";
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile(pattern).matcher(json);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
     }
 }
