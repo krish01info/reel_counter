@@ -1,0 +1,35 @@
+<!--
+    ic_youtube.xml
+    A simplified YouTube "play button" vector icon.
+    Place in res/drawable/ic_youtube.xml
+
+    Tinted at runtime via Compose Icon(tint=ColorYtRed).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Rounded rectangle background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M23.495,6.205
+            a3.007,3.007 0,0 0,-2.088,-2.088
+            C19.468,3.69 12,3.69 12,3.69
+            s-7.468,0 -9.407,0.428
+            A3.007,3.007 0,0 0,0.505 6.205
+            C0.077,8.144 0.077,12.001 0.077,12.001
+            s0,3.857 0.428,5.797
+            a3.007,3.007 0,0 0,2.088 2.088
+            C4.532,20.312 12,20.312 12,20.312
+            s7.468,0 9.407,-0.426
+            a3.007,3.007 0,0 0,2.088,-2.088
+            C23.923,15.858 23.923,12 23.923,12
+            s0,-3.857 -0.428,-5.795z" />
+
+    <!-- Play triangle -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M9.545,15.568 L15.818,12 9.545,8.432z" />
+</vector>

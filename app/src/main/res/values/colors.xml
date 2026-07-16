@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background color matching Compose BackgroundDark = 0xFF0D0D1A -->
+    <color name="background_dark">#0D0D1A</color>
+    <!-- Accent purple for adaptive icon background -->
+    <color name="ic_launcher_background">#7C4DFF</color>
+    <color name="ic_launcher_foreground">#FFFFFF</color>
+
+    <color name="primary_neon">#7C4DFF</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="secondary_teal">#00E5FF</color>
+    <color name="surface_dark">#16162A</color>
+    <color name="surface_variant">#1E1E3A</color>
+    <color name="on_background">#E0E0F0</color>
+    <color name="on_surface">#B0B0CC</color>
+    <color name="error_red">#FF5252</color>
+    <color name="success_green">#69F0AE</color>
+
+    <!-- Overlay color -->
+    <color name="overlay_normal">#CC1A1A2E</color>
+</resources>

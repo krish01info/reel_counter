@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Scroll Stop – Theme
+    -->
+    <style name="Theme.ScrollStop" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Window background and status bar/navigation bar colors -->
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:navigationBarColor">@color/background_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Material color mappings -->
+        <item name="colorPrimary">@color/primary_neon</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSecondary">@color/secondary_teal</item>
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorError">@color/error_red</item>
+    </style>
+</resources>

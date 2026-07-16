@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="32dp"
+        android:gravity="center_horizontal">
+
+        <!-- ── HEADER ── -->
+        <FrameLayout
+            android:id="@+id/header_pulse_circle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/circle_glow"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="🛑"
+                android:textSize="36sp" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Scroll Stop"
+            android:textColor="@color/on_background"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Take back control of your attention"
+            android:textColor="@color/on_surface"
+            android:alpha="0.6"
+            android:textSize="14sp" />
+
+        <!-- ── COUNTER CARDS ROW ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <!-- IG Reels Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_ig_reels"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:strokeWidth="1dp"
+                app:strokeColor="#10FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IG Reels"
+                        android:textColor="@color/on_surface"
+                        android:alpha="0.7"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="start" />
+
+                    <TextView
+                        android:id="@+id/text_ig_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/on_background"
+                        android:textSize="38sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_ig"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:progress="0"
+                        android:max="100" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- YT Shorts Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_yt_shorts"
+                android:layout_width="0dp"
+                android:layout_height="130dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:strokeWidth="1dp"
+                app:strokeColor="#10FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="YT Shorts"
+                        android:textColor="@color/on_surface"
+                        android:alpha="0.7"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="start" />
+
+                    <TextView
+                        android:id="@+id/text_yt_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/on_background"
+                        android:textSize="38sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_yt"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:progress="0"
+                        android:max="100" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- ── ALERT BANNER ── -->
+        <LinearLayout
+            android:id="@+id/alert_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="@drawable/alert_banner_bg"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚠️"
+                android:textSize="22sp"
+                android:layout_marginEnd="12dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Threshold Exceeded!"
+                    android:textColor="@color/error_red"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You've been scrolling too long. Time for a break!"
+                    android:textColor="@color/on_surface"
+                    android:alpha="0.8"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ── PERMISSIONS CARD ── -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@color/surface_variant"
+            app:strokeWidth="1dp"
+            app:strokeColor="#10FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Permissions"
+                    android:textColor="@color/on_background"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <!-- Overlay Permission Row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/icon_permission_overlay">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Draw Over Other Apps"
+                            android:textColor="@color/on_background"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Required for floating widget"
+                            android:textColor="@color/on_surface"
+                            android:alpha="0.5"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/icon_permission_overlay"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_cancel_circle" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#10FFFFFF"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Accessibility Permission Row -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/icon_permission_accessibility">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Accessibility Service"
+                            android:textColor="@color/on_background"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Required to detect scrolling"
+                            android:textColor="@color/on_surface"
+                            android:alpha="0.5"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/icon_permission_accessibility"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_cancel_circle" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── BUTTONS ── -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_grant_permissions"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            app:cornerRadius="16dp"
+            android:text="Grant Permissions"
+            android:textColor="#001A22"
+            app:icon="@drawable/ic_check_circle"
+            app:iconTint="#001A22"
+            app:backgroundTint="@color/secondary_teal"
+            app:elevation="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_toggle_service"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            app:cornerRadius="16dp"
+            android:text="Activate Overlay"
+            android:textColor="#001A22"
+            app:icon="@drawable/ic_check_circle"
+            app:iconTint="#001A22"
+            app:backgroundTint="@color/primary_neon"
+            app:elevation="6dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_reset_counters"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            app:cornerRadius="14dp"
+            android:text="Reset Counters"
+            android:textColor="@color/on_surface"
+            app:strokeColor="#4DFFFFFF" />
+
+        <!-- ── THRESHOLD SECTION ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Adjust Alert Threshold"
+            android:textColor="@color/on_background"
+            android:alpha="0.8"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/text_threshold_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alert threshold: 15 scrolls"
+                android:textColor="@color/on_background"
+                android:textSize="16sp" />
+
+            <SeekBar
+                android:id="@+id/slider_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:min="5"
+                android:max="100"
+                android:progress="15"
+                android:progressTint="@color/primary_neon"
+                android:thumbTint="@color/primary_neon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="(Adjust to change when alerts appear)"
+                android:textColor="@color/on_surface"
+                android:alpha="0.4"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Scroll Stop</string>
+    <string name="accessibility_service_label">Scroll Stop – Screen Time Guard</string>
+    <string name="accessibility_service_description">
+        Scroll Stop monitors scroll events in Instagram and YouTube to help you
+        track and limit doom-scrolling. No data is collected or transmitted.
+        All processing happens entirely on your device.
+    </string>
+</resources>

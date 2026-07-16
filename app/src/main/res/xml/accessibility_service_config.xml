@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ====================================================================
+    Accessibility Service Configuration for Scroll Stop
+    ====================================================================
+    accessibilityEventTypes:
+        typeViewScrolled       — fires whenever the user scrolls a view
+        typeWindowStateChanged — fires when a new activity/screen appears
+                                 (used to detect app switches)
+
+    accessibilityFeedbackType:
+        feedbackGeneric — no auditory/haptic feedback; silent tracking only
+
+    flags:
+        flagReportViewIds          — allows reading view resource IDs in the
+                                     hierarchy (helps identify Reels/Shorts frames)
+        flagRetrieveInteractiveWindows — lets us inspect UI across windows
+
+    notificationTimeout:
+        100ms — minimum delay between events; keeps CPU load low
+
+    packageNames:
+        Scoped to Instagram and YouTube only; the service ignores all
+        other apps for privacy and performance.
+    ====================================================================
+-->
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:accessibilityEventTypes="typeViewScrolled|typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds|flagRetrieveInteractiveWindows"
+    android:notificationTimeout="100"
+
+    android:canRetrieveWindowContent="true"
+    android:canRequestFilterKeyEvents="false"
+    android:canRequestTouchExplorationMode="false"
+
+    android:packageNames="com.instagram.android,com.google.android.youtube"
+
+    android:settingsActivity=".ui.MainActivity"
+
+    android:description="@string/accessibility_service_description" />
