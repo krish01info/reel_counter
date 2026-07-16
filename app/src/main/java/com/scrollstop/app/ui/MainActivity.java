@@ -265,28 +265,40 @@ public class MainActivity extends AppCompatActivity implements ScrollCounterStat
                     String remoteVersionName = parseJsonString(json, "versionName");
                     String updateUrl = parseJsonString(json, "updateUrl");
 
+                    // Get installed version code
                     int localVersionCode;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                         localVersionCode = (int) getPackageManager().getPackageInfo(getPackageName(), 0).getLongVersionCode();
                     } else {
+                        //noinspection deprecation
                         localVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
                     }
 
+                    // Only show dialog if remote is newer AND user hasn't dismissed this version
                     if (remoteVersionCode > localVersionCode) {
-                        runOnUiThread(() -> showUpdateDialog(remoteVersionName, updateUrl));
+                        android.content.SharedPreferences prefs = getSharedPreferences("scroll_stop_prefs", MODE_PRIVATE);
+                        int skippedVersionCode = prefs.getInt("skipped_version_code", -1);
+
+                        if (skippedVersionCode != remoteVersionCode) {
+                            // New version not yet dismissed — show dialog
+                            final int finalRemote = remoteVersionCode;
+                            runOnUiThread(() -> showUpdateDialog(remoteVersionName, updateUrl, finalRemote));
+                        }
+                        // else: user already tapped "Later" for this version, stay silent
                     }
+                    // else: already on latest — do nothing, no dialog
                 }
             } catch (Exception e) {
-                // Fail silently in background if offline
+                // Fail silently if offline
             }
         }).start();
     }
 
-    private void showUpdateDialog(String newVersionName, String updateUrl) {
+    private void showUpdateDialog(String newVersionName, String updateUrl, int remoteVersionCode) {
         new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Update Available!")
-                .setMessage("A new version (v" + newVersionName + ") of Scroll Stop is available. Would you like to update now?")
-                .setPositiveButton("Update", (dialog, which) -> {
+                .setTitle("🎉 Update Available!")
+                .setMessage("Version v" + newVersionName + " is available.\n\nDownload and install the latest APK from GitHub Releases.")
+                .setPositiveButton("Download", (dialog, which) -> {
                     try {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(updateUrl));
                         startActivity(browserIntent);
@@ -294,7 +306,14 @@ public class MainActivity extends AppCompatActivity implements ScrollCounterStat
                         e.printStackTrace();
                     }
                 })
-                .setNegativeButton("Later", null)
+                .setNegativeButton("Later", (dialog, which) -> {
+                    // Remember that user dismissed THIS version — don't ask again for it
+                    getSharedPreferences("scroll_stop_prefs", MODE_PRIVATE)
+                            .edit()
+                            .putInt("skipped_version_code", remoteVersionCode)
+                            .apply();
+                })
+                .setCancelable(false)
                 .show();
     }
 
